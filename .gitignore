@@ -1,21 +1,47 @@
-# 環境変数ファイル（個人情報含む）
-.env.local
+# 環境変数ファイル（開発用機密情報）
 .env
+.env.local
+.env.development
+.env.production
+.env.test
 
-# Node.js関連
+# Node.js
 node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# テストカバレッジ
+# テスト結果
 coverage/
+*.lcov
+
+# IDE設定
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS生成ファイル
+.DS_Store
+Thumbs.db
+
+# ログファイル
+logs/
+*.log
 
 # 一時ファイル
-*.tmp
-*.temp
-.DS_Store
+tmp/
+temp/
 
-# ビルド出力
+# Chrome拡張機能のビルド成果物
 dist/
 build/
+
+# バックアップファイル
+*.bak
+*.backup
+
+# 開発用設定ファイル
+config.local.js
+settings.local.json
+.env*
