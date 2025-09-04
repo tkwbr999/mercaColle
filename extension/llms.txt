@@ -1,0 +1,29 @@
+# mercaColle
+
+> Chrome extension for extracting Mercari smart payment transaction details and exporting to CSV format compatible with freee accounting software
+
+mercaColle (メルカコレ) is a Chrome extension that automatically extracts transaction data from Mercari smart payment pages and exports it in CSV format optimized for import into freee accounting software.
+
+## Core Documentation
+
+- [README](README.md): User guide and installation instructions
+- [manifest.json](manifest.json): Chrome extension configuration
+- [CHANGELOG](CHANGELOG.md): Version history and release notes
+
+## Source Code
+
+- [popup/popup.js](popup/popup.js): Main UI logic and CSV export functionality
+- [src/content.js](src/content.js): DOM manipulation and data extraction from Mercari pages
+- [popup/popup.html](popup/popup.html): Extension popup interface
+- [popup/popup.css](popup/popup.css): UI styling
+
+## Testing
+
+- [tests/](tests/): Test suite including unit and E2E tests
+- [package.json](package.json): Dependencies and test scripts
+
+## Development
+
+- Build: `npm run build` (lint + format)
+- Test: `npm run test:unit` 
+- Release: `npm run release`

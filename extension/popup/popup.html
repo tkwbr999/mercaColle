@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>mercaColle（メルカコレ）</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>mercaColle（メルカコレ）</h1>
+
+      <div class="status-section">
+        <div class="status-item">
+          <span class="status-label">最終更新:</span>
+          <span id="last-updated">未取得</span>
+        </div>
+      </div>
+
+      <div class="data-section">
+        <div class="data-header">
+          <h2>カード利用明細</h2>
+        </div>
+
+        <div class="data-content">
+          <div id="card-info" class="card-content active">
+            <div class="data-stats">
+              <span>取得済み明細: <span id="card-count">0</span>件</span>
+            </div>
+            <div id="card-list" class="data-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-section">
+        <button id="extract-btn" class="primary-btn">利用明細取得</button>
+        <button id="inspect-btn" class="secondary-btn">ページ構造検査</button>
+        <button id="export-btn" class="secondary-btn">CSVエクスポート</button>
+        <button id="clear-btn" class="danger-btn">データクリア</button>
+      </div>
+
+      <div class="info-section">
+        <p class="info-text">
+          <strong>使用手順:</strong><br />
+          1. Mercariのスマート払い明細ページを開く<br />
+          2. 「利用明細取得」ボタンを押す<br />
+          3. 取得できない場合は「ページ構造検査」でデバッグしてください。
+        </p>
+      </div>
+    </div>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

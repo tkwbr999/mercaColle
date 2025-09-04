@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: extension/package-lock.json
+
+      - name: Install dependencies
+        working-directory: extension
+        run: npm ci
+
+      - name: Run linting
+        working-directory: extension
+        run: npm run lint
+
+      - name: Check formatting
+        working-directory: extension
+        run: npm run format:check
+
+      - name: Run unit tests
+        working-directory: extension
+        run: npm run test:unit
+
+      - name: Run E2E tests
+        working-directory: extension
+        run: npm run test:e2e
+
+      - name: Build extension
+        working-directory: extension
+        run: npm run build
+
+      - name: Upload test coverage
+        uses: codecov/codecov-action@v3
+        with:
+          directory: extension/coverage
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
