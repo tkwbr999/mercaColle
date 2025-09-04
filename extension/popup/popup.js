@@ -40,6 +40,13 @@ class MercaCollePopup {
     document.getElementById('clear-btn').addEventListener('click', () => {
       this.clearData();
     });
+
+    // コンテンツスクリプトからの通知を受信
+    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+      if (request.action === 'showNotification') {
+        this.showToast(request.message, request.type, 5000);
+      }
+    });
   }
 
   async loadData() {
@@ -70,10 +77,10 @@ class MercaCollePopup {
     this.renderCardList('card-list', this.cardData);
   }
 
-    toggleUsage() {
+  toggleUsage() {
     const toggle = document.getElementById('usage-toggle');
     const content = document.getElementById('usage-content');
-    
+
     toggle.classList.toggle('active');
     content.classList.toggle('active');
   }
@@ -82,14 +89,14 @@ class MercaCollePopup {
     const container = document.getElementById('toast-container');
     const toast = document.createElement('div');
     toast.className = `toast ${type}`;
-    
+
     toast.innerHTML = `
       <div class="toast-content">${message}</div>
       <button class="toast-close" onclick="this.parentElement.remove()">×</button>
     `;
-    
+
     container.appendChild(toast);
-    
+
     // 自動で消える
     if (duration > 0) {
       setTimeout(() => {
@@ -126,7 +133,11 @@ class MercaCollePopup {
 
       // 問題がある場合のみ通知
       if (result && result.hasIssues) {
-        this.showToast('ページ構造に問題があります。「ページ構造検査」で詳細を確認してください。', 'warning', 4000);
+        this.showToast(
+          'ページ構造に問題があります。「ページ構造検査」で詳細を確認してください。',
+          'warning',
+          4000
+        );
       }
     } catch (error) {
       // エラーが発生した場合は静かに処理（通知なし）
@@ -183,7 +194,11 @@ class MercaCollePopup {
       }, 1000);
     } catch (error) {
       console.error('カード情報抽出エラー:', error);
-      this.showToast('カード情報の取得に失敗しました。ページを再読み込みしてから再試行してください。', 'error', 5000);
+      this.showToast(
+        'カード情報の取得に失敗しました。ページを再読み込みしてから再試行してください。',
+        'error',
+        5000
+      );
     }
   }
 
@@ -201,13 +216,17 @@ class MercaCollePopup {
 
     // コンテンツスクリプトにページ検査を指示
     try {
-      const result = await chrome.tabs.sendMessage(tab.id, { 
+      const result = await chrome.tabs.sendMessage(tab.id, {
         action: 'inspect_page',
         silent: false // 手動実行時は通知あり
       });
-      
+
       if (result && result.hasIssues) {
-        this.showToast('ページ構造に問題があります。詳細はコンソールを確認してください。', 'warning', 4000);
+        this.showToast(
+          'ページ構造に問題があります。詳細はコンソールを確認してください。',
+          'warning',
+          4000
+        );
       } else {
         this.showToast('ページ構造検査が完了しました。', 'success', 3000);
       }
