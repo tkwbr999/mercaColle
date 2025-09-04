@@ -59,13 +59,11 @@ jobs:
         working-directory: extension
         run: npm ci --prefer-offline --no-audit
 
-      - name: Commit version updates
+      - name: Display version info
         run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add extension/package.json extension/manifest.json
-          git commit -m "Update version to ${{ steps.version.outputs.version }} [skip ci]"
-          git push
+          echo "Building release version: ${{ steps.version.outputs.version }}"
+          echo "Package.json version: $(node -p "require('./extension/package.json').version")"
+          echo "Manifest.json version: $(node -p "require('./extension/manifest.json').version")"
 
       - name: Run linting
         working-directory: extension
