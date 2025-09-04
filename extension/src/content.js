@@ -49,7 +49,10 @@ class MercariDataExtractor {
     } else {
       const errorMessage = `対応していないページです。\n現在のURL: ${currentUrl}\n対応ページ: https://jp.mercari.com/mypage/merpay/smartpayment/easypay/select`;
       console.error('非対応ページでの実行:', errorMessage);
-      this.sendNotificationToPopup('対応していないページです。スマートペイの明細ページで実行してください。', 'error');
+      this.sendNotificationToPopup(
+        '対応していないページです。スマートペイの明細ページで実行してください。',
+        'error'
+      );
     }
   }
 
@@ -99,7 +102,10 @@ class MercariDataExtractor {
       const pageStructure = this.debugGetPageStructure();
       const errorMessage = `利用明細要素が見つかりません。\n\nページ情報:\n- URL: ${window.location.href}\n- 検証した要素数: ${pageStructure.totalElements}\n- 利用可能なクラス: ${pageStructure.classes.slice(0, 10).join(', ')}\n\n対処方法:\n1. ページが完全に読み込まれるまでお待ちください\n2. ページをスクロールして全ての明細を表示してください\n3. Mercariのページ構造が変更された可能性があります`;
       console.error('明細要素検索失敗:', errorMessage, { pageStructure });
-      this.sendNotificationToPopup('利用明細要素が見つかりません。ページを完全に読み込んでから再試行してください。', 'error');
+      this.sendNotificationToPopup(
+        '利用明細要素が見つかりません。ページを完全に読み込んでから再試行してください。',
+        'error'
+      );
       return;
     }
 
@@ -114,7 +120,10 @@ class MercariDataExtractor {
 
     if (transactionData.length > 0) {
       this.sendDataToPopup('card', transactionData);
-      this.sendNotificationToPopup(`成功: ${transactionData.length}件の利用明細を取得しました。`, 'success');
+      this.sendNotificationToPopup(
+        `成功: ${transactionData.length}件の利用明細を取得しました。`,
+        'success'
+      );
     } else {
       const errorMessage = `利用明細の抽出に失敗しました。\n\n詳細:\n- 検出した要素数: ${transactionElements.length}\n- 抽出できたデータ数: 0\n- URL: ${window.location.href}\n\n原因:\n- Mercariのページ構造が変更された可能性があります\n- 明細データの形式が想定と異なる可能性があります\n\n対処方法:\n- ページ構造検査ボタンでデバッグ情報を確認してください`;
       console.error('明細抽出失敗:', errorMessage, {
@@ -122,7 +131,10 @@ class MercariDataExtractor {
         extractedData: transactionData.length,
         url: window.location.href
       });
-      this.sendNotificationToPopup('利用明細の抽出に失敗しました。ページ構造検査で詳細を確認してください。', 'error');
+      this.sendNotificationToPopup(
+        '利用明細の抽出に失敗しました。ページ構造検査で詳細を確認してください。',
+        'error'
+      );
     }
   }
 
@@ -391,7 +403,10 @@ class MercariDataExtractor {
     const hasIssues = this.detectPageIssues();
 
     if (!silent) {
-      this.sendNotificationToPopup('ページ構造の詳細検査が完了しました。コンソールで結果を確認してください。', 'info');
+      this.sendNotificationToPopup(
+        'ページ構造の詳細検査が完了しました。コンソールで結果を確認してください。',
+        'info'
+      );
     }
 
     return { hasIssues };
@@ -418,7 +433,9 @@ class MercariDataExtractor {
     }
 
     // チェックボックスが少ない
-    const checkboxElements = document.querySelectorAll('input[type="checkbox"]');
+    const checkboxElements = document.querySelectorAll(
+      'input[type="checkbox"]'
+    );
     if (checkboxElements.length < 2) {
       issues.push('チェックボックス要素が少ない');
     }
