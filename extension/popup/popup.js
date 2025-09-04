@@ -70,7 +70,7 @@ class MercaCollePopup {
   toggleUsage() {
     const toggle = document.getElementById('usage-toggle');
     const content = document.getElementById('usage-content');
-    
+
     toggle.classList.toggle('active');
     content.classList.toggle('active');
   }

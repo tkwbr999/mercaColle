@@ -5,7 +5,8 @@ body {
   padding: 0;
   font-family:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background-color: #f5f5f5;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+  color: white;
 }
 
 .container {
@@ -16,23 +17,26 @@ h1 {
   margin: 0 0 16px 0;
   font-size: 18px;
   font-weight: 600;
-  color: #333;
+  color: #ff6b35;
   text-align: center;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .usage-section {
-  background: white;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   overflow: hidden;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .usage-toggle {
   width: 100%;
   padding: 12px 16px;
   border: none;
-  background: #ff6b35;
+  background: linear-gradient(135deg, #ff6b35 0%, #e65100 100%);
   color: white;
   font-size: 14px;
   font-weight: 500;
@@ -40,11 +44,14 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
 }
 
 .usage-toggle:hover {
-  background: #e65100;
+  background: linear-gradient(135deg, #e65100 0%, #d84315 100%);
+  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.4);
+  transform: translateY(-1px);
 }
 
 .toggle-icon {
@@ -83,7 +90,7 @@ h1 {
 }
 
 .step-number {
-  background: #ff6b35;
+  background: linear-gradient(135deg, #00bcd4 0%, #0097a7 100%);
   color: white;
   width: 20px;
   height: 20px;
@@ -96,26 +103,31 @@ h1 {
   margin-right: 12px;
   flex-shrink: 0;
   margin-top: 1px;
+  box-shadow: 0 2px 6px rgba(0, 188, 212, 0.3);
 }
 
 .link-btn {
-  color: #ff6b35;
+  color: #00bcd4;
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.2s;
+  transition: all 0.2s;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .link-btn:hover {
-  color: #e65100;
+  color: #4dd0e1;
   text-decoration: underline;
+  text-shadow: 0 2px 4px rgba(0, 188, 212, 0.5);
 }
 
 .status-section {
-  background: white;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   padding: 12px;
   margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .status-item {
@@ -127,14 +139,16 @@ h1 {
 
 .status-label {
   font-weight: 500;
-  color: #666;
+  color: #00bcd4;
 }
 
 .data-section {
-  background: white;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 8px;
   margin-bottom: 16px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .data-tab {
@@ -153,13 +167,15 @@ h1 {
 }
 
 .tab-button.active {
-  background-color: #ff6b35;
+  background: linear-gradient(135deg, #ff6b35 0%, #e65100 100%);
   color: white;
   font-weight: 500;
+  box-shadow: 0 2px 8px rgba(255, 107, 53, 0.3);
 }
 
 .tab-button:not(.active):hover {
-  background-color: #f0f0f0;
+  background: rgba(255, 255, 255, 0.1);
+  color: #00bcd4;
 }
 
 .tab-content {
@@ -175,7 +191,7 @@ h1 {
   margin-bottom: 12px;
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: #00bcd4;
 }
 
 .data-list {
@@ -185,7 +201,7 @@ h1 {
 
 .data-item {
   padding: 8px 0;
-  border-bottom: 1px solid #f0f0f0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .data-item:last-child {
