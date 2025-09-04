@@ -6,7 +6,6 @@
  */
 
 import fs from 'fs';
-import path from 'path';
 
 const VERSION_FILE = 'version.json';
 
@@ -25,7 +24,7 @@ function updateVersionFile() {
 // package.jsonのバージョンを更新
 function updatePackageJson(filePath) {
   if (!fs.existsSync(filePath)) return;
-  
+
   const packageJson = JSON.parse(fs.readFileSync(filePath, 'utf8'));
   packageJson.version = versionConfig.version;
   fs.writeFileSync(filePath, JSON.stringify(packageJson, null, 2));
@@ -35,7 +34,7 @@ function updatePackageJson(filePath) {
 // manifest.jsonのバージョンを更新
 function updateManifestJson(filePath) {
   if (!fs.existsSync(filePath)) return;
-  
+
   const manifestJson = JSON.parse(fs.readFileSync(filePath, 'utf8'));
   manifestJson.version = versionConfig.version;
   fs.writeFileSync(filePath, JSON.stringify(manifestJson, null, 2));
@@ -46,12 +45,12 @@ function updateManifestJson(filePath) {
 function setVersion(version) {
   versionConfig.version = version;
   versionConfig.lastUpdated = new Date().toISOString();
-  
+
   updateVersionFile();
   updatePackageJson('package.json');
   updatePackageJson('extension/package.json');
   updateManifestJson('extension/manifest.json');
-  
+
   console.log(`🎉 Version updated to ${version} across all files`);
 }
 
@@ -62,7 +61,9 @@ function showVersion() {
     console.log(`Current version: ${current.version}`);
     console.log(`Last updated: ${current.lastUpdated}`);
   } else {
-    console.log('No version file found. Run with --set <version> to initialize.');
+    console.log(
+      'No version file found. Run with --set <version> to initialize.'
+    );
   }
 }
 
@@ -76,7 +77,9 @@ if (args.length === 0) {
 } else {
   console.log('Usage:');
   console.log('  node version.js                    # Show current version');
-  console.log('  node version.js --set <version>   # Set version across all files');
+  console.log(
+    '  node version.js --set <version>   # Set version across all files'
+  );
   console.log('');
   console.log('Examples:');
   console.log('  node version.js --set 1.0.0');

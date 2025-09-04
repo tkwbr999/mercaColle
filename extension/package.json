@@ -1,6 +1,6 @@
 {
   "name": "mercacolle-extension",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "mercaColle（メルカコレ）- Mercariの明細を取得するChrome拡張機能",
   "license": "MIT",
   "author": "mercaColle",
