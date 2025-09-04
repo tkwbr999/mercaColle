@@ -19,32 +19,28 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: extension/package-lock.json
 
       - name: Cache node_modules
         uses: actions/cache@v3
         with:
-          path: extension/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('extension/package-lock.json') }}
+          path: |
+            node_modules
+            extension/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json', 'extension/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
 
       - name: Install dependencies
-        working-directory: extension
-        run: npm ci --prefer-offline --no-audit
+        run: npm run install:all
 
       - name: Run linting
-        working-directory: extension
         run: npm run lint
 
       - name: Check formatting
-        working-directory: extension
         run: npm run format:check
 
       - name: Run unit tests
-        working-directory: extension
         run: npm run test:unit
 
       - name: Build extension
-        working-directory: extension
         run: npm run build

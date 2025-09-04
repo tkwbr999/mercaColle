@@ -29,9 +29,7 @@ describe('MercariDataExtractor', () => {
     console.error = jest.fn();
     global.alert = jest.fn();
 
-    // location のモック（JSDOMの制限を回避）
-    delete window.location;
-    window.location = { href: 'http://localhost/' };
+    // location のモックは不要（JSDOMで既に利用可能）
 
     // MutationObserver のモック
     global.MutationObserver = jest.fn().mockImplementation(() => ({
@@ -220,9 +218,11 @@ describe('MercariDataExtractor', () => {
     });
 
     test('利用明細データが正しく抽出される', () => {
-      // スマート払いページのURLを模擬
-      window.location.href =
-        'https://jp.mercari.com/mypage/merpay/smartpayment/easypay/select';
+      // スマート払いページのURLを模擬（JSDOMの制限を回避）
+      delete window.location;
+      window.location = {
+        href: 'https://jp.mercari.com/mypage/merpay/smartpayment/easypay/select'
+      };
 
       extractor.extractPaymentTransactions();
 
@@ -335,8 +335,11 @@ describe('MercariDataExtractor', () => {
           <div>¥1,000</div>
         </div>
       `;
-      window.location.href =
-        'https://jp.mercari.com/mypage/merpay/smartpayment/easypay/select';
+      // スマート払いページのURLを模擬（JSDOMの制限を回避）
+      delete window.location;
+      window.location = {
+        href: 'https://jp.mercari.com/mypage/merpay/smartpayment/easypay/select'
+      };
 
       expect(() => {
         extractor.extractPaymentTransactions();

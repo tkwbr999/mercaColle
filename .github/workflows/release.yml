@@ -23,13 +23,14 @@ jobs:
         with:
           node-version: '18'
           cache: 'npm'
-          cache-dependency-path: extension/package-lock.json
 
       - name: Cache node_modules
         uses: actions/cache@v3
         with:
-          path: extension/node_modules
-          key: ${{ runner.os }}-node-${{ hashFiles('extension/package-lock.json') }}
+          path: |
+            node_modules
+            extension/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json', 'extension/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
 
@@ -41,49 +42,32 @@ jobs:
           echo "version=$VERSION" >> $GITHUB_OUTPUT
           echo "Extracted version: $VERSION"
 
-      - name: Update package.json version
-        working-directory: extension
+      - name: Update version across all files
         run: |
-          # package.jsonのバージョンを更新
-          npm version ${{ steps.version.outputs.version }} --no-git-tag-version
-          echo "Updated package.json version to ${{ steps.version.outputs.version }}"
-
-      - name: Update manifest.json version
-        working-directory: extension
-        run: |
-          # manifest.jsonのバージョンを更新
-          node -e "
-            const fs = require('fs');
-            const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf8'));
-            manifest.version = '${{ steps.version.outputs.version }}';
-            fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2));
-          "
-          echo "Updated manifest.json version to ${{ steps.version.outputs.version }}"
+          # バージョン管理スクリプトを使用して全ファイルを更新
+          node version.js --set ${{ steps.version.outputs.version }}
+          echo "Updated version to ${{ steps.version.outputs.version }} across all files"
 
       - name: Install dependencies
-        working-directory: extension
-        run: npm ci --prefer-offline --no-audit
+        run: npm run install:all
 
       - name: Display version info
         run: |
           echo "Building release version: ${{ steps.version.outputs.version }}"
-          echo "Package.json version: $(node -p "require('./extension/package.json').version")"
+          echo "Package.json version: $(node -p "require('./package.json').version")"
+          echo "Extension package.json version: $(node -p "require('./extension/package.json').version")"
           echo "Manifest.json version: $(node -p "require('./extension/manifest.json').version")"
 
       - name: Run linting
-        working-directory: extension
         run: npm run lint
 
       - name: Check formatting
-        working-directory: extension
         run: npm run format:check
 
       - name: Run unit tests
-        working-directory: extension
         run: npm run test:unit
 
       - name: Build extension
-        working-directory: extension
         run: npm run build
 
       - name: Upload test coverage
@@ -96,25 +80,14 @@ jobs:
 
       - name: Create release ZIP
         run: |
-          cd extension
-          zip -r ../mercaColle-extension-${{ github.ref_name }}.zip . \
-            -x "node_modules/*" \
-            -x "tests/*" \
-            -x "coverage/*" \
-            -x ".git/*" \
-            -x "*.log" \
-            -x "package-lock.json" \
-            -x ".DS_Store" \
-            -x "dist/*" \
-            -x "build/*" \
-            -x ".env*" \
-            -x "*.tmp" \
-            -x "*.temp"
+          # 配布用ZIPファイル作成スクリプトを使用
+          npm run build:dist
+          echo "Distribution ZIP created successfully"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: mercaColle-extension-${{ github.ref_name }}.zip
+          files: dist/mercaColle-extension-${{ github.ref_name }}.zip
           generate_release_notes: true
           draft: false
           prerelease: false
