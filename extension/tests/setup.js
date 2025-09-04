@@ -1,5 +1,27 @@
 // Jest テストセットアップファイル
 
+// JSDOMの警告を抑制
+const originalConsoleError = console.error;
+console.error = (...args) => {
+  // JSDOMの"Not implemented: navigation"警告を抑制
+  if (
+    args[0] &&
+    typeof args[0] === 'string' &&
+    args[0].includes('Not implemented: navigation')
+  ) {
+    return;
+  }
+  // エラーオブジェクトの場合もチェック
+  if (
+    args[0] &&
+    args[0].message &&
+    args[0].message.includes('Not implemented: navigation')
+  ) {
+    return;
+  }
+  originalConsoleError(...args);
+};
+
 // Chrome API のグローバルモック
 global.chrome = {
   storage: {
