@@ -403,3 +403,15 @@ h1 {
   background: #fafafa;
   border-radius: 0 0 12px 12px;
 }
+
+.link-btn {
+  color: #ff6b35;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.link-btn:hover {
+  color: #e65100;
+  text-decoration: underline;
+}
