@@ -4,7 +4,13 @@
   "description": "mercaColle（メルカコレ）- Mercariの明細を取得するChrome拡張機能",
   "license": "MIT",
   "author": "mercaColle",
-  "keywords": ["chrome-extension", "mercari", "transaction", "csv", "freee"],
+  "keywords": [
+    "chrome-extension",
+    "mercari",
+    "transaction",
+    "csv",
+    "freee"
+  ],
   "type": "module",
   "scripts": {
     "test": "jest",
