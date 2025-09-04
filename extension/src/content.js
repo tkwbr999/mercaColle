@@ -17,8 +17,11 @@ class MercariDataExtractor {
         this.extractCardData();
         sendResponse({ success: true });
       } else if (request.action === 'inspect_page') {
-        this.inspectPageStructure();
-        sendResponse({ success: true });
+        const result = this.inspectPageStructure(request.silent);
+        sendResponse({ success: true, hasIssues: result.hasIssues });
+      } else if (request.action === 'inspectPageStructure') {
+        const result = this.inspectPageStructure(request.silent);
+        sendResponse({ success: true, hasIssues: result.hasIssues });
       }
       return true;
     });
@@ -46,7 +49,7 @@ class MercariDataExtractor {
     } else {
       const errorMessage = `対応していないページです。\n現在のURL: ${currentUrl}\n対応ページ: https://jp.mercari.com/mypage/merpay/smartpayment/easypay/select`;
       console.error('非対応ページでの実行:', errorMessage);
-      alert(errorMessage);
+      this.sendNotificationToPopup('対応していないページです。スマートペイの明細ページで実行してください。', 'error');
     }
   }
 
@@ -96,7 +99,7 @@ class MercariDataExtractor {
       const pageStructure = this.debugGetPageStructure();
       const errorMessage = `利用明細要素が見つかりません。\n\nページ情報:\n- URL: ${window.location.href}\n- 検証した要素数: ${pageStructure.totalElements}\n- 利用可能なクラス: ${pageStructure.classes.slice(0, 10).join(', ')}\n\n対処方法:\n1. ページが完全に読み込まれるまでお待ちください\n2. ページをスクロールして全ての明細を表示してください\n3. Mercariのページ構造が変更された可能性があります`;
       console.error('明細要素検索失敗:', errorMessage, { pageStructure });
-      alert(errorMessage);
+      this.sendNotificationToPopup('利用明細要素が見つかりません。ページを完全に読み込んでから再試行してください。', 'error');
       return;
     }
 
@@ -111,7 +114,7 @@ class MercariDataExtractor {
 
     if (transactionData.length > 0) {
       this.sendDataToPopup('card', transactionData);
-      alert(`成功: ${transactionData.length}件の利用明細を取得しました。`);
+      this.sendNotificationToPopup(`成功: ${transactionData.length}件の利用明細を取得しました。`, 'success');
     } else {
       const errorMessage = `利用明細の抽出に失敗しました。\n\n詳細:\n- 検出した要素数: ${transactionElements.length}\n- 抽出できたデータ数: 0\n- URL: ${window.location.href}\n\n原因:\n- Mercariのページ構造が変更された可能性があります\n- 明細データの形式が想定と異なる可能性があります\n\n対処方法:\n- ページ構造検査ボタンでデバッグ情報を確認してください`;
       console.error('明細抽出失敗:', errorMessage, {
@@ -119,7 +122,7 @@ class MercariDataExtractor {
         extractedData: transactionData.length,
         url: window.location.href
       });
-      alert(errorMessage);
+      this.sendNotificationToPopup('利用明細の抽出に失敗しました。ページ構造検査で詳細を確認してください。', 'error');
     }
   }
 
@@ -307,7 +310,7 @@ class MercariDataExtractor {
   }
 
   // ページ構造の詳細検査
-  inspectPageStructure() {
+  inspectPageStructure(silent = false) {
     console.log('=== ページ構造の詳細検査 ===');
 
     // 基本情報
@@ -384,9 +387,48 @@ class MercariDataExtractor {
         });
       });
 
-    alert(
-      'ページ構造の詳細検査が完了しました。コンソールで結果を確認してください。'
+    // 問題の検出
+    const hasIssues = this.detectPageIssues();
+
+    if (!silent) {
+      this.sendNotificationToPopup('ページ構造の詳細検査が完了しました。コンソールで結果を確認してください。', 'info');
+    }
+
+    return { hasIssues };
+  }
+
+  // ページの問題を検出
+  detectPageIssues() {
+    const issues = [];
+
+    // 金額要素が少ない
+    const amountElements = Array.from(document.querySelectorAll('*')).filter(
+      el => el.textContent && el.textContent.match(/¥[\d,]+/)
     );
+    if (amountElements.length < 3) {
+      issues.push('金額要素が少ない');
+    }
+
+    // 日付要素が少ない
+    const dateElements = Array.from(document.querySelectorAll('*')).filter(
+      el => el.textContent && el.textContent.match(/\d{4}\/\d{2}\/\d{2}/)
+    );
+    if (dateElements.length < 3) {
+      issues.push('日付要素が少ない');
+    }
+
+    // チェックボックスが少ない
+    const checkboxElements = document.querySelectorAll('input[type="checkbox"]');
+    if (checkboxElements.length < 2) {
+      issues.push('チェックボックス要素が少ない');
+    }
+
+    // 問題がある場合はログに出力
+    if (issues.length > 0) {
+      console.warn('ページ構造の問題を検出:', issues);
+    }
+
+    return issues.length > 0;
   }
 
   // デバッグ用: ページ構造を取得
@@ -424,6 +466,18 @@ class MercariDataExtractor {
 
     chrome.storage.local.set(storageData, () => {
       // データ保存完了（ログ出力なし）
+    });
+  }
+
+  // ポップアップに通知を送信
+  sendNotificationToPopup(message, type = 'info') {
+    // ストレージに通知データを保存
+    chrome.storage.local.set({
+      notification: {
+        message: message,
+        type: type,
+        timestamp: new Date().toISOString()
+      }
     });
   }
 }
