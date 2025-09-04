@@ -17,8 +17,11 @@ class MercariDataExtractor {
         this.extractCardData();
         sendResponse({ success: true });
       } else if (request.action === 'inspect_page') {
-        this.inspectPageStructure();
-        sendResponse({ success: true });
+        const result = this.inspectPageStructure(request.silent);
+        sendResponse({ success: true, hasIssues: result.hasIssues });
+      } else if (request.action === 'inspectPageStructure') {
+        const result = this.inspectPageStructure(request.silent);
+        sendResponse({ success: true, hasIssues: result.hasIssues });
       }
       return true;
     });
@@ -307,7 +310,7 @@ class MercariDataExtractor {
   }
 
   // ページ構造の詳細検査
-  inspectPageStructure() {
+  inspectPageStructure(silent = false) {
     console.log('=== ページ構造の詳細検査 ===');
 
     // 基本情報
@@ -384,9 +387,50 @@ class MercariDataExtractor {
         });
       });
 
-    alert(
-      'ページ構造の詳細検査が完了しました。コンソールで結果を確認してください。'
+    // 問題の検出
+    const hasIssues = this.detectPageIssues();
+
+    if (!silent) {
+      alert(
+        'ページ構造の詳細検査が完了しました。コンソールで結果を確認してください。'
+      );
+    }
+
+    return { hasIssues };
+  }
+
+  // ページの問題を検出
+  detectPageIssues() {
+    const issues = [];
+
+    // 金額要素が少ない
+    const amountElements = Array.from(document.querySelectorAll('*')).filter(
+      el => el.textContent && el.textContent.match(/¥[\d,]+/)
     );
+    if (amountElements.length < 3) {
+      issues.push('金額要素が少ない');
+    }
+
+    // 日付要素が少ない
+    const dateElements = Array.from(document.querySelectorAll('*')).filter(
+      el => el.textContent && el.textContent.match(/\d{4}\/\d{2}\/\d{2}/)
+    );
+    if (dateElements.length < 3) {
+      issues.push('日付要素が少ない');
+    }
+
+    // チェックボックスが少ない
+    const checkboxElements = document.querySelectorAll('input[type="checkbox"]');
+    if (checkboxElements.length < 2) {
+      issues.push('チェックボックス要素が少ない');
+    }
+
+    // 問題がある場合はログに出力
+    if (issues.length > 0) {
+      console.warn('ページ構造の問題を検出:', issues);
+    }
+
+    return issues.length > 0;
   }
 
   // デバッグ用: ページ構造を取得
