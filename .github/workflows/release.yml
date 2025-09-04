@@ -8,6 +8,11 @@ on:
 jobs:
   build-and-release:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+      issues: write
+      pull-requests: write
 
     steps:
       - name: Checkout code
@@ -113,5 +118,6 @@ jobs:
           generate_release_notes: true
           draft: false
           prerelease: false
+          token: ${{ secrets.GITHUB_TOKEN }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
