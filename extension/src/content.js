@@ -391,9 +391,7 @@ class MercariDataExtractor {
     const hasIssues = this.detectPageIssues();
 
     if (!silent) {
-      alert(
-        'ページ構造の詳細検査が完了しました。コンソールで結果を確認してください。'
-      );
+      this.sendNotificationToPopup('ページ構造の詳細検査が完了しました。コンソールで結果を確認してください。', 'info');
     }
 
     return { hasIssues };
