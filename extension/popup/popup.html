@@ -10,6 +10,29 @@
     <div class="container">
       <h1>mercaColle（メルカコレ）</h1>
 
+      <div class="usage-section">
+        <button class="usage-toggle" id="usage-toggle">
+          <span class="toggle-icon">▼</span>
+          利用方法
+        </button>
+        <div class="usage-content" id="usage-content">
+          <div class="usage-steps">
+            <div class="step">
+              <span class="step-number">1</span>
+              <a href="https://jp.mercari.com/mypage/merpay/smartpayment/easypay/select" target="_blank" class="link-btn">スマートペイの明細ページを開く</a>
+            </div>
+            <div class="step">
+              <span class="step-number">2</span>
+              「利用明細取得」ボタンを押す
+            </div>
+            <div class="step">
+              <span class="step-number">3</span>
+              取得できない場合は「ページ構造検査」でデバッグしてください
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div class="status-section">
         <div class="status-item">
           <span class="status-label">最終更新:</span>
@@ -37,15 +60,6 @@
         <button id="inspect-btn" class="secondary-btn">ページ構造検査</button>
         <button id="export-btn" class="secondary-btn">CSVエクスポート</button>
         <button id="clear-btn" class="danger-btn">データクリア</button>
-      </div>
-
-      <div class="info-section">
-        <p class="info-text">
-          <strong>使用手順:</strong><br />
-          1. <a href="https://jp.mercari.com/mypage/merpay/smartpayment/easypay/select" target="_blank" class="link-btn">スマートペイの明細ページを開く</a><br />
-          2. 「利用明細取得」ボタンを押す<br />
-          3. 取得できない場合は「ページ構造検査」でデバッグしてください。
-        </p>
       </div>
     </div>
 

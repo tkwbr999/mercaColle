@@ -13,6 +13,11 @@ class MercaCollePopup {
   }
 
   setupEventListeners() {
+    // 利用方法トグルボタン
+    document.getElementById('usage-toggle').addEventListener('click', () => {
+      this.toggleUsage();
+    });
+
     // カード情報取得ボタン
     document.getElementById('extract-btn').addEventListener('click', () => {
       this.extractCardData();
@@ -60,6 +65,14 @@ class MercaCollePopup {
     // カード情報
     document.getElementById('card-count').textContent = this.cardData.length;
     this.renderCardList('card-list', this.cardData);
+  }
+
+  toggleUsage() {
+    const toggle = document.getElementById('usage-toggle');
+    const content = document.getElementById('usage-content');
+    
+    toggle.classList.toggle('active');
+    content.classList.toggle('active');
   }
 
   renderCardList(containerId, data) {
