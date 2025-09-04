@@ -13,6 +13,8 @@ class MercaCollePopup {
     this.updateUI();
     // プラグイン開封時に自動でページ構造検査を実行
     await this.autoInspectPage();
+    // 通知の監視を開始
+    this.startNotificationMonitoring();
   }
 
   setupEventListeners() {
@@ -39,13 +41,6 @@ class MercaCollePopup {
     // データクリアボタン
     document.getElementById('clear-btn').addEventListener('click', () => {
       this.clearData();
-    });
-
-    // コンテンツスクリプトからの通知を受信
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-      if (request.action === 'showNotification') {
-        this.showToast(request.message, request.type, 5000);
-      }
     });
   }
 
@@ -112,6 +107,20 @@ class MercaCollePopup {
         toast.remove();
       }
     }, 300);
+  }
+
+  startNotificationMonitoring() {
+    // ストレージの変更を監視
+    chrome.storage.onChanged.addListener((changes, namespace) => {
+      if (namespace === 'local' && changes.notification) {
+        const notification = changes.notification.newValue;
+        if (notification) {
+          this.showToast(notification.message, notification.type, 5000);
+          // 通知を削除
+          chrome.storage.local.remove('notification');
+        }
+      }
+    });
   }
 
   async autoInspectPage() {

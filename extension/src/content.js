@@ -471,10 +471,13 @@ class MercariDataExtractor {
 
   // ポップアップに通知を送信
   sendNotificationToPopup(message, type = 'info') {
-    chrome.runtime.sendMessage({
-      action: 'showNotification',
-      message: message,
-      type: type
+    // ストレージに通知データを保存
+    chrome.storage.local.set({
+      notification: {
+        message: message,
+        type: type,
+        timestamp: new Date().toISOString()
+      }
     });
   }
 }
