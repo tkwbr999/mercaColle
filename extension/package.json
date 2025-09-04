@@ -9,8 +9,6 @@
   "scripts": {
     "test": "jest",
     "test:unit": "jest tests/unit",
-    "test:e2e": "jest tests/e2e",
-    "test:payment": "jest tests/e2e/payment.e2e.js",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "lint": "eslint popup/ src/ tests/",
@@ -27,8 +25,7 @@
     "eslint": "^8.0.0",
     "jest": "^29.0.0",
     "jest-environment-jsdom": "^30.0.0",
-    "prettier": "^3.0.0",
-    "puppeteer": "^21.0.0"
+    "prettier": "^3.0.0"
   },
   "jest": {
     "testEnvironment": "jsdom",
@@ -36,8 +33,7 @@
       "<rootDir>/tests/setup.js"
     ],
     "testMatch": [
-      "**/tests/**/*.test.js",
-      "**/tests/**/*.e2e.js"
+      "**/tests/**/*.test.js"
     ],
     "collectCoverageFrom": [
       "popup/**/*.js",

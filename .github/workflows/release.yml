@@ -20,6 +20,14 @@ jobs:
           cache: 'npm'
           cache-dependency-path: extension/package-lock.json
 
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: extension/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('extension/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
       - name: Extract version from tag
         id: version
         run: |
@@ -49,7 +57,7 @@ jobs:
 
       - name: Install dependencies
         working-directory: extension
-        run: npm ci
+        run: npm ci --prefer-offline --no-audit
 
       - name: Commit version updates
         run: |
