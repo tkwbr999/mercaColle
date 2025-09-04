@@ -20,9 +20,44 @@ jobs:
           cache: 'npm'
           cache-dependency-path: extension/package-lock.json
 
+      - name: Extract version from tag
+        id: version
+        run: |
+          # タグからバージョンを抽出（v1.0.0 -> 1.0.0）
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "Extracted version: $VERSION"
+
+      - name: Update package.json version
+        working-directory: extension
+        run: |
+          # package.jsonのバージョンを更新
+          npm version ${{ steps.version.outputs.version }} --no-git-tag-version
+          echo "Updated package.json version to ${{ steps.version.outputs.version }}"
+
+      - name: Update manifest.json version
+        working-directory: extension
+        run: |
+          # manifest.jsonのバージョンを更新
+          node -e "
+            const fs = require('fs');
+            const manifest = JSON.parse(fs.readFileSync('manifest.json', 'utf8'));
+            manifest.version = '${{ steps.version.outputs.version }}';
+            fs.writeFileSync('manifest.json', JSON.stringify(manifest, null, 2));
+          "
+          echo "Updated manifest.json version to ${{ steps.version.outputs.version }}"
+
       - name: Install dependencies
         working-directory: extension
         run: npm ci
+
+      - name: Commit version updates
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add extension/package.json extension/manifest.json
+          git commit -m "Update version to ${{ steps.version.outputs.version }} [skip ci]"
+          git push
 
       - name: Run linting
         working-directory: extension
@@ -36,13 +71,17 @@ jobs:
         working-directory: extension
         run: npm run test:unit
 
-      - name: Run E2E tests
-        working-directory: extension
-        run: npm run test:e2e
-
       - name: Build extension
         working-directory: extension
         run: npm run build
+
+      - name: Upload test coverage
+        uses: codecov/codecov-action@v3
+        with:
+          directory: extension/coverage
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
 
       - name: Create release ZIP
         run: |

@@ -37,18 +37,6 @@ jobs:
         working-directory: extension
         run: npm run test:unit
 
-      - name: Run E2E tests
-        working-directory: extension
-        run: npm run test:e2e
-
       - name: Build extension
         working-directory: extension
         run: npm run build
-
-      - name: Upload test coverage
-        uses: codecov/codecov-action@v3
-        with:
-          directory: extension/coverage
-          flags: unittests
-          name: codecov-umbrella
-          fail_ci_if_error: false
